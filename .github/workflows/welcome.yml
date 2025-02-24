@@ -1,7 +1,5 @@
 name: welcome
 
-
-
 # This step triggers after the learner creates a new repository from the template.
 # This workflow updates from step 0 to step 1.
 
@@ -13,16 +11,12 @@ on:
   push:
     branches:
       - welcome-workflow
-  
-
 
 # Reference: https://docs.github.com/en/actions/security-guides/automatic-token-authentication
 permissions:
   # Need `contents: read` to checkout the repository.
   # Need `contents: write` to update the step metadata.
   pull-requests: write
-  
-  
 
 jobs:
   # Get the current step to only run the main job when the learner is on the same step.
@@ -33,11 +27,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - id: get_step
-      - run: gh pr comment $PR_URL --body "Welcome to the repository!"
+        run: echo "Get current step"  # Placeholder for the missing step
+      - name: Comment on PR
+        run: gh pr comment $PR_URL --body "Welcome to the repository!"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PR_URL: ${{ github.event.pull_request.html_url }}
-      
 
   on_start:
     name: On start
@@ -97,4 +92,3 @@ jobs:
           from_step: 0
           to_step: 1
           branch_name: welcome-workflow
-      
