@@ -55,6 +55,16 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0 # Let's get all the branches.
+      - name: Update README to indicate completion
+        run: |
+          echo "Update README to show completion of steps"
+          sed -i 's/Current step: 5/Current step: Completed/' README.md
+          git config user.name github-actions[bot]
+          git config user.email github-actions[bot]@users.noreply.github.com
+          git commit -am "Mark steps as completed"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       # In README.md, switch step 5 for step X.
       - name: Update to step X
