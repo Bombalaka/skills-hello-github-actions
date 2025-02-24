@@ -10,6 +10,9 @@ name: welcome
 on:
   pull_request:
     types: [opened]
+  push:
+    branches:
+      - welcome-workflow
   
 
 
