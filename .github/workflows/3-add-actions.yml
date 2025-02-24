@@ -38,7 +38,7 @@ jobs:
 
   on_add_actions:
     name: On add actions
-    needs: get_current_step
+    needs: build
 
     # We will only run this action when:
     # 1. This repository isn't the template repository.
