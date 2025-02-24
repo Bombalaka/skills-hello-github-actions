@@ -33,10 +33,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - id: get_step
-      - run: gh pr comment $PR_URL --body "Welcome to the repository!"
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          PR_URL: ${{ github.event.pull_request.html_url }}
+      
 
   on_start:
     name: On start
@@ -96,3 +93,7 @@ jobs:
           from_step: 0
           to_step: 1
           branch_name: welcome-workflow
+      - run: gh pr comment $PR_URL --body "Welcome to the repository!"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_URL: ${{ github.event.pull_request.html_url }}
