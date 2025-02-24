@@ -20,7 +20,7 @@ permissions:
 
 jobs:
   # Get the current step to only run the main job when the learner is on the same step.
-  get_current_step:
+  build:
     name: 3-add-actions
     runs-on: ubuntu-latest
     steps:
