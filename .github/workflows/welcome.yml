@@ -1,4 +1,6 @@
-name: Step 0, Welcome
+name: welcome
+
+
 
 # This step triggers after the learner creates a new repository from the template.
 # This workflow updates from step 0 to step 1.
@@ -6,34 +8,40 @@ name: Step 0, Welcome
 # This will run every time we create push a commit to `main`.
 # Reference: https://docs.github.com/en/actions/learn-github-actions/events-that-trigger-workflows
 on:
-  workflow_dispatch:
+  pull_request:
+    types: [opened]
   push:
     branches:
-      - main
+      - welcome-workflow
+  
+
 
 # Reference: https://docs.github.com/en/actions/security-guides/automatic-token-authentication
 permissions:
   # Need `contents: read` to checkout the repository.
   # Need `contents: write` to update the step metadata.
-  contents: write
+  pull-requests: write
+  
+  
 
 jobs:
   # Get the current step to only run the main job when the learner is on the same step.
-  get_current_step:
-    name: Check current step number
+  build:
+    name: welcome
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
       - id: get_step
-        run: |
-          echo "current_step=$(cat ./.github/steps/-step.txt)" >> $GITHUB_OUTPUT
-    outputs:
-      current_step: ${{ steps.get_step.outputs.current_step }}
+      - run: gh pr comment $PR_URL --body "Welcome to the repository!"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_URL: ${{ github.event.pull_request.html_url }}
+      
 
   on_start:
     name: On start
-    needs: get_current_step
+    needs: build
 
     # We will only run this action when:
     # 1. This repository isn't the template repository.
@@ -89,3 +97,4 @@ jobs:
           from_step: 0
           to_step: 1
           branch_name: welcome-workflow
+      

@@ -1,11 +1,14 @@
-name: Step 3, Add actions
+name: 3-add-actions
 
 # This step triggers after every push to welcome-workflow.
 # This workflow updates from step 3 to step 4.
 
 # This will run every time we push to welcome-workflow.
 # Reference: https://docs.github.com/en/actions/learn-github-actions/events-that-trigger-workflows
+
 on:
+  pull_request:
+    types: [opened]
   workflow_dispatch:
   push:
     branches:
@@ -17,11 +20,28 @@ permissions:
   # Need `contents: write` to update the step metadata.
   pull-requests: write
   contents: write
+  
 
 jobs:
   # Get the current step to only run the main job when the learner is on the same step.
+  welcome_comment:
+    name:  step-3
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+    - name: Set PR URL
+      run: echo "PR_URL=${{ github.event.pull_request.html_url }}" >> $GITHUB_ENV
+      env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - run: gh pr comment $PR_URL --body "Welcome to the repository!"
+      env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_URL: ${{ github.event.pull_request.html_url }}
+
   get_current_step:
-    name: Check current step number
+    name: 3_add-actions
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -31,10 +51,11 @@ jobs:
           echo "current_step=$(cat ./.github/steps/-step.txt)" >> $GITHUB_OUTPUT
     outputs:
       current_step: ${{ steps.get_step.outputs.current_step }}
+      
 
   on_add_actions:
     name: On add actions
-    needs: get_current_step
+    needs:  get_current_step
 
     # We will only run this action when:
     # 1. This repository isn't the template repository.
@@ -70,3 +91,4 @@ jobs:
           from_step: 3
           to_step: 4
           branch_name: welcome-workflow
+     
