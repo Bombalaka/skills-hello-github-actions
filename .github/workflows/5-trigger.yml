@@ -1,4 +1,4 @@
-name: Step 5, Trigger the workflow
+name: 5-trigger
 
 # This step triggers after we finish running "Post welcome comment".
 # This workflow updates from step 5 to step X.
